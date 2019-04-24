@@ -1,7 +1,9 @@
 const express = require('express');
+
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
+
 const port = process.env.PORT || 3000;
 
 app.get('/location', (req, res) => {
@@ -22,7 +24,7 @@ app.get('/weather', (req, res) => {
 
 const getWeather = () => {
   const darkSkyData = require('./data/darksky.json');
-  let weatherArr = [];
+  const weatherArr = [];
 
   darkSkyData.daily.data.forEach((dailySet) => {
     const weather = new Weather(dailySet);
