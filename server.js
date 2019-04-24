@@ -8,19 +8,19 @@ const port = process.env.PORT || 3000;
 
 // app.use('cors');
 
-app.get('/location', (req, res) => {
+app.get('/location', (request, response) => {
   try {
-    findLatLong(req, res);
+    findLatLong(request, response);
   } catch (error) {
-    handleErrors(res);
+    handleErrors(response);
   }
 });
 
-app.get('/weather', (req, res) => {
+app.get('/weather', (request, response) => {
   try {
-    res.send(getWeather());
+    getWeather();
   } catch (error) {
-    handleErrors(res);
+    handleErrors(response);
   }
 });
 
@@ -40,24 +40,24 @@ function Weather(data) {
 
 // try query instead of request.query.data
 
-const findLatLong = (req, res) => {
-  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.data}&key=${process.env.GEOCODE_API_KEY}`;
+const findLatLong = (request, response) => {
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
 
   return superagent.get(url)
     .then(res => {
-      res.status(200);
-      res.send(new Location(req.query.data, res));
+      response.send(new Location(request.query.data, res));
     }).catch(error => {
-      res.status(500);
-      res.send('Something went wrong!');
+      console.log(error);
+      // res.status(500);
+      response.send('Something went wrong!');
     });
 };
 
 function Location(query, res) {
   (this.searchQuery = query),
-  (this.formattedQuery = res.results[0].formatted_address),
-  (this.latitude = res.results[0].geometry.location.lat),
-  (this.longitude = res.results[0].geometry.location.lng);
+  (this.formattedQuery = res.body.results[0].formatted_address),
+  (this.latitude = res.body.results[0].geometry.location.lat),
+  (this.longitude = res.body.results[0].geometry.location.lng);
 }
 
 // ERROR HANDLING
