@@ -1,14 +1,16 @@
 const express = require('express');
-
+const superagent = require('superagent');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
 
 const port = process.env.PORT || 3000;
 
+// app.use('cors');
+
 app.get('/location', (req, res) => {
   try {
-    res.send(findLatLong(req.query.data));
+    res.send(findLatLong(req, res));
   } catch (error) {
     handleErrors(res);
   }
@@ -36,17 +38,26 @@ function Weather(data) {
   this.time = new Date(data.time * 1000).toString().slice(0, 15);
 }
 
-const findLatLong = (query) => {
-  const geoData = require('./data/geo.json');
-  const location = new Location(query, geoData);
-  return location;
+// try query instead of request.query.data
+
+const findLatLong = (req, res) => {
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.data}&key=${process.env.GEOCODE_API_KEY}`;
+
+  return superagent.get(url)
+    .then(res => {
+      res.status(200);
+      res.send(new Location(req.query.data, res));
+    }).catch(error => {
+      res.status(500);
+      res.send('Something went wrong!');
+    });
 };
 
-function Location(query, data) {
+function Location(query, res) {
   (this.searchQuery = query),
-  (this.formattedQuery = data.results[0].formatted_address),
-  (this.latitude = data.results[0].geometry.location.lat),
-  (this.longitude = data.results[0].geometry.location.lng);
+  (this.formattedQuery = res.results[0].formatted_address),
+  (this.latitude = res.results[0].geometry.location.lat),
+  (this.longitude = res.results[0].geometry.location.lng);
 }
 
 // ERROR HANDLING

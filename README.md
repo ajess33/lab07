@@ -44,11 +44,11 @@ Number and name of feature: Formatting Data
 
 Estimate of time needed to complete: 30 minutes
 
-Start time:
+Start time: 9:15
 
-Finish time:
+Finish time: 9:30
 
-Actual time needed to complete:
+Actual time needed to complete: 15 minutes
 
 ---
 
