@@ -17,28 +17,33 @@ app.get('/location', (request, response) => {
 });
 
 app.get('/weather', (request, response) => {
-  try {
-    getWeather();
-  } catch (error) {
-    handleErrors(response);
-  }
+  // try {
+  getWeather(request, response);
+  // }
+  // catch (error) {
+  //   console.log(error);
+  //   handleErrors(response);
+  // }
 });
 
-const getWeather = () => {
-  const darkSkyData = require('./data/darksky.json');
+const getWeather = (request, response) => {
+  let url = `https://api.darksky.net/forecast/${process.env.WEATHERKEY}/lat=${request.query.lat}&${request.query.lng}`;
 
-  const weatherArr = darkSkyData.daily.data.map((dailySet) => {
-    return new Weather(dailySet);
-  });
-  return weatherArr;
+  return superagent.get(url)
+    .then(res => {
+      const weatherArr = res.body.daily.data.map(el => {
+        return new Weather(el);
+      });
+      response.send(weatherArr);
+    }).catch(error => {
+      console.log(error);
+    });
 };
 
-function Weather(data) {
-  this.forecast = data.summary;
-  this.time = new Date(data.time * 1000).toString().slice(0, 15);
+function Weather(el) {
+  this.forecast = el.summary;
+  this.time = new Date(el.time * 1000).toString().slice(0, 15);
 }
-
-// try query instead of request.query.data
 
 const findLatLong = (request, response) => {
   let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
