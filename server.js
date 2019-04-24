@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.get('/location', (req, res) => {
   try {
-    res.send(findLatLong(req, res));
+    findLatLong(req, res);
   } catch (error) {
     handleErrors(res);
   }
