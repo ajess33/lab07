@@ -24,11 +24,9 @@ app.get('/weather', (req, res) => {
 
 const getWeather = () => {
   const darkSkyData = require('./data/darksky.json');
-  const weatherArr = [];
 
-  darkSkyData.daily.data.forEach((dailySet) => {
-    const weather = new Weather(dailySet);
-    weatherArr.push(weather);
+  const weatherArr = darkSkyData.daily.data.map((dailySet) => {
+    return new Weather(dailySet);
   });
   return weatherArr;
 };
