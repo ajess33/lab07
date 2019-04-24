@@ -56,11 +56,11 @@ Number and name of feature: Locations
 
 Estimate of time needed to complete: 1 hour
 
-Start time:
+Start time: 9:30
 
-Finish time:
+Finish time: 11
 
-Actual time needed to complete:
+Actual time needed to complete: 1.5 hours
 
 ---
 
@@ -68,20 +68,8 @@ Number and name of feature: Weather
 
 Estimate of time needed to complete: 1 hour
 
-Start time:
+Start time: 11:15
 
-Finish time:
+Finish time: 12:30
 
-Actual time needed to complete:
-
----
-
-Number and name of feature: EventBrite
-
-Estimate of time needed to complete: 1 hour
-
-Start time:
-
-Finish time:
-
-Actual time needed to complete:
+Actual time needed to complete: 1 hour 15 minutes
