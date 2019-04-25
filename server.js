@@ -19,48 +19,53 @@ app.get('/location', (request, response) => {
 });
 
 app.get('/weather', (request, response) => {
-  try {
-    getWeather();
-  } catch (error) {
-    handleErrors(response);
-  }
+  // try {
+  getWeather(request, response);
+  // }
+  // catch (error) {
+  //   console.log(error);
+  //   handleErrors(response);
+  // }
 });
 
-const getWeather = () => {
-  const darkSkyData = require();
-
-  const weatherArr = darkSkyData.daily.data.map((dailySet) => {
-    return new Weather(dailySet);
-  });
-  return weatherArr;
-};
-
-function Weather(data) {
-  this.forecast = data.summary;
-  this.time = new Date(data.time * 1000).toString().slice(0, 15);
-}
-
-// try query instead of request.query.data
-
-const findLatLong = (request, response) => {
-  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.data}&key=${process.env.GEOCODE_API_KEY}`;
+const getWeather = (request, response) => {
+  let url = `https://api.darksky.net/forecast/${process.env.WEATHERKEY}/lat=${request.query.lat}&${request.query.lng}`;
 
   return superagent.get(url)
     .then(res => {
-      response.status(200);
+      const weatherArr = res.body.daily.data.map(el => {
+        return new Weather(el);
+      });
+      response.send(weatherArr);
+    }).catch(error => {
+      console.log(error);
+    });
+};
+
+function Weather(el) {
+  this.forecast = el.summary;
+  this.time = new Date(el.time * 1000).toString().slice(0, 15);
+}
+
+
+const findLatLong = (request, response) => {
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
+
+  return superagent.get(url)
+    .then(res => {
       response.send(new Location(request.query.data, res));
     }).catch(error => {
-      response.status(500);
       console.log(error);
-      res.send('Something went wrong!');
+      // res.status(500);
+      response.send('Something went wrong!');
     });
 };
 
 function Location(query, res) {
   (this.searchQuery = query),
-  (this.formattedQuery = res.results[0].formatted_address),
-  (this.latitude = res.results[0].geometry.location.lat),
-  (this.longitude = res.results[0].geometry.location.lng);
+  (this.formattedQuery = res.body.results[0].formatted_address),
+  (this.latitude = res.body.results[0].geometry.location.lat),
+  (this.longitude = res.body.results[0].geometry.location.lng);
 }
 
 // ERROR HANDLING
