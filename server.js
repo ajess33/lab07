@@ -10,24 +10,24 @@ const port = process.env.PORT || 3000;
 
 // app.use('cors');
 
-app.get('/location', (req, res) => {
+app.get('/location', (request, response) => {
   try {
-    findLatLong(req, res);
+    findLatLong(request, response);
   } catch (error) {
-    handleErrors(res);
+    handleErrors(response);
   }
 });
 
-app.get('/weather', (req, res) => {
+app.get('/weather', (request, response) => {
   try {
-    res.send(getWeather());
+    getWeather();
   } catch (error) {
-    handleErrors(res);
+    handleErrors(response);
   }
 });
 
 const getWeather = () => {
-  const darkSkyData = require('./data/darksky.json');
+  const darkSkyData = require();
 
   const weatherArr = darkSkyData.daily.data.map((dailySet) => {
     return new Weather(dailySet);
@@ -42,15 +42,16 @@ function Weather(data) {
 
 // try query instead of request.query.data
 
-const findLatLong = (req, res) => {
+const findLatLong = (request, response) => {
   let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.data}&key=${process.env.GEOCODE_API_KEY}`;
 
   return superagent.get(url)
     .then(res => {
-      res.status(200);
-      res.send(new Location(req.query.data, res));
+      response.status(200);
+      response.send(new Location(request.query.data, res));
     }).catch(error => {
-      res.status(500);
+      response.status(500);
+      console.log(error);
       res.send('Something went wrong!');
     });
 };
