@@ -11,21 +11,11 @@ const port = process.env.PORT || 3000;
 //app.use('cors');
 
 app.get('/location', (request, response) => {
-  //try {
   findLatLong(request, response);
-  //} catch (error) {
-  //  handleErrors(response);
-  //}
 });
 
 app.get('/weather', (request, response) => {
-  //try {
   getWeather(request, response);
-  //}
-  //catch (error) {
-  //  console.log(error);
-  //  handleErrors(response);
-  //}
 });
 
 const getWeather = (request, response) => {
@@ -56,7 +46,6 @@ const findLatLong = (request, response) => {
       response.send(new Location(request.query.data, res));
     }).catch(error => {
       console.log(error);
-      // res.status(500);
       response.send('Something went wrong!');
     });
 };
