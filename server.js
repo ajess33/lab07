@@ -27,7 +27,7 @@ app.get('/weather', (request, response) => {
 });
 
 const getWeather = (request, response) => {
-  let url = `https://api.darksky.net/forecast/${process.env.WEATHERKEY}/lat=${request.query.lat}&${request.query.lng}`;
+  let url = `https://api.darksky.net/forecast/${process.env.WEATHERKEY}/${request.query.lat},${request.query.lng}`;
 
   return superagent.get(url)
     .then(res => {
