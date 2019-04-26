@@ -8,28 +8,28 @@ require('dotenv').config();
 
 const port = process.env.PORT || 3000;
 
-// app.use('cors');
+//app.use('cors');
 
 app.get('/location', (request, response) => {
-  try {
-    findLatLong(request, response);
-  } catch (error) {
-    handleErrors(response);
-  }
+  //try {
+  findLatLong(request, response);
+  //} catch (error) {
+  //  handleErrors(response);
+  //}
 });
 
 app.get('/weather', (request, response) => {
-  // try {
+  //try {
   getWeather(request, response);
-  // }
-  // catch (error) {
-  //   console.log(error);
-  //   handleErrors(response);
-  // }
+  //}
+  //catch (error) {
+  //  console.log(error);
+  //  handleErrors(response);
+  //}
 });
 
 const getWeather = (request, response) => {
-  let url = `https://api.darksky.net/forecast/${process.env.WEATHERKEY}/lat=${request.query.lat}&${request.query.lng}`;
+  let url = `https://api.darksky.net/forecast/${process.env.WEATHERKEY}/${request.query.lat},${request.query.lng}`;
 
   return superagent.get(url)
     .then(res => {
